@@ -69,6 +69,7 @@ jobs:
           git config user.email "infra@routerprotocol.com"
           ls -al
           echo "PWD: $(pwd)"
+          mkdir -p linux
           mv ${{ github.workspace }}/router-chain-binaries/router-orchestrator.tar.gz ./linux/
           git add linux/router-orchestrator.tar.gz
           git commit -m "Latest orchestrator executable updated: $(date +'%Y-%m-%d %H:%M:%S')"
