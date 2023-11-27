@@ -1,0 +1,94 @@
+name: Orchestrator-ubuntu-22.04-Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Orchestrator version (e.g., v1.0.0)'
+        required: true
+      releaseName:
+        description: 'Release name (e.g., v1.0.0)'
+        required: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.20'
+
+  build-router-orchestrator:
+    needs: setup
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: 'router-protocol/router-orchestrator'
+          ref: 'testnet'
+          path: 'router-orchestrator'
+          token: ${{ secrets.USER_GITHUB_TOKEN }}
+      - name: Build router-orchestrator
+        run: |
+          cd router-orchestrator
+          git config --global url."https://anubhavrouter:${{secrets.USER_GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
+          git config user.name "Router Protocol"
+          git config user.email "infra@routerprotocol.com"
+          git tag ${{ github.event.inputs.version }}
+          make build
+          mkdir -p ${{ github.workspace }}/router-chain-binaries/
+          tar -czvf router-orchestrator.tar.gz router-orchestrator
+          mv router-orchestrator.tar.gz ${{ github.workspace }}/router-chain-binaries/
+      - name: Archive router-orchestrator binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: router-orchestrator
+          path: ${{ github.workspace }}/router-chain-binaries/router-orchestrator.tar.gz
+
+  package-and-push:
+    needs: [build-router-orchestrator]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download router-orchestrator binary
+        uses: actions/download-artifact@v2
+        with:
+          name: router-orchestrator
+          path: ${{ github.workspace }}/router-chain-binaries/
+      - uses: actions/checkout@v3
+        with:
+          repository: 'router-protocol/rc-test-rele'
+          ref: 'main'
+          path: 'rc-releases'
+          token: ${{ secrets.USER_GITHUB_TOKEN }}
+      - name: Package and Push new binaries to the current repository
+        run: |
+          cd rc-releases
+          git config --global url."https://anubhavrouter:${{secrets.USER_GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
+          git config user.name "Router Protocol"
+          git config user.email "infra@routerprotocol.com"
+          mv ${{ github.workspace }}/router-chain-binaries/router-orchestrator.tar.gz ./linux/
+          git add linux/router-orchestrator.tar.gz
+          git commit -m "Latest orchestrator executable updated: $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
+
+  tag-release:
+    needs: package-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Configure Git
+        run: |
+          git config user.name "Router Protocol"
+          git config user.email "infra@routerprotocol.com"
+
+      - name: Tag Release
+        run: |
+          git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.releaseName }}"
+          git push origin ${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
