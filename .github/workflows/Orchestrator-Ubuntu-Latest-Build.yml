@@ -57,13 +57,13 @@ jobs:
           path: ${{ github.workspace }}/router-chain-binaries/
       - uses: actions/checkout@v3
         with:
-          repository: 'router-protocol/rc-test-rele'
+          repository: 'router-protocol/router-orchestrator-binary-release'
           ref: 'main'
-          path: 'rc-releases'
+          path: 'router-orchestrator-binary-release'
           token: ${{ secrets.USER_GITHUB_TOKEN }}
       - name: Package and Push new binaries to the current repository
         run: |
-          cd rc-releases
+          cd router-orchestrator-binary-release
           git config --global url."https://anubhavrouter:${{secrets.USER_GITHUB_TOKEN}}@github.com/".insteadOf "https://github.com/"
           git config user.name "Router Protocol"
           git config user.email "infra@routerprotocol.com"
