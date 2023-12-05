@@ -11,6 +11,7 @@ if ! command -v docker &>/dev/null; then
     sudo systemctl status docker
     USER=$(whoami)
     sudo usermod -aG docker "${USER}"
+    sudo systemctl start docker
     sudo su - "${USER}"
     echo "Docker installed successfully"
     docker swarm init
