@@ -29,7 +29,6 @@ echo "$DIRECTORY_PATH"
 docker build \
     --no-cache \
     -t router_orchestrator_image:latest \
-    --secret id=id_rsa,src="${HOME}"/.ssh/id_rsa \
     -f "${DIRECTORY_PATH}"/Dockerfile .
 
 # check if image was built successfully
