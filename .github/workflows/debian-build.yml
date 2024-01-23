@@ -1,4 +1,4 @@
-name: Orchestrator-ubuntu-20.04-Build
+name: Orchestrator-debian-Build
 
 on:
   workflow_dispatch:
