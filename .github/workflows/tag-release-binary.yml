@@ -1,0 +1,31 @@
+name: tag-release-binary
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag version'
+        required: true
+      releaseName:
+        description: 'Release Name'
+        required: true
+
+jobs:
+    tag-release:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+            with:
+              fetch-depth: 0
+          
+          - name: Configure Git
+            run: |
+              git config user.name "Router Protocol"
+              git config user.email "infra@routerprotocol.com"
+    
+          - name: Tag Release
+            run: |
+              git tag -a ${{ github.event.inputs.version }} -m "${{ github.event.inputs.releaseName }}"
+              git push origin ${{ github.event.inputs.version }}
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
