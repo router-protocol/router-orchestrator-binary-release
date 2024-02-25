@@ -45,6 +45,6 @@ docker service create \
     --secret source=ETH_PRIVATE_KEY,target=ETH_PRIVATE_KEY \
     --secret source=COSMOS_PRIVATE_KEY,target=COSMOS_PRIVATE_KEY \
     --mount type=bind,source="${CONFIG_FILE_PATH}",target=/router/config.json,readonly \
-    --entrypoint "router-orchestrator start --config /router/config.json" \
+    --entrypoint "router-orchestrator start --config /router/config.json --reset" \
     -p "${HEALTH_CHECK_PORT}":8001 \
     ${IMAGE_NAME}
