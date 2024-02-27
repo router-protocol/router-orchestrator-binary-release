@@ -26,4 +26,4 @@ RUN apt-get remove -y wget bash --allow-remove-essential && \
     rm -rf /root/.ssh && \
     rm /bin/sh
 
-ENTRYPOINT ["router-orchestrator", "start", "--config", "/src/config.json","--reset"]
+ENTRYPOINT ["router-orchestrator", "start", "--config", "/src/config.json", "--reset"]
