@@ -55,7 +55,6 @@ docker service create \
     --restart-condition on-failure \
     --restart-delay 10s \
     --limit-cpu 6 \
-    --restart-max-attempts 5 \
     --secret source="${ETH_PRIVATE_KEY_SECRET_NAME}",target=ETH_PRIVATE_KEY \
     --secret source="${COSMOS_PRIVATE_KEY_SECRET_NAME}",target=COSMOS_PRIVATE_KEY \
     --mount type=bind,source="${CONFIG_FILE_PATH}",target=/router/config.json,readonly \
