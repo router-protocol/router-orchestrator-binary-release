@@ -38,7 +38,7 @@ jobs:
           tar -czvf router-orchestrator.tar.gz router-orchestrator
           mv router-orchestrator.tar.gz ${{ github.workspace }}/router-chain-binaries/
       - name: Archive router-orchestrator binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: router-orchestrator
           path: ${{ github.workspace }}/router-chain-binaries/router-orchestrator.tar.gz
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Download router-orchestrator binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: router-orchestrator
           path: ${{ github.workspace }}/router-chain-binaries/
