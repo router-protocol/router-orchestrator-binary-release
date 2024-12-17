@@ -3,7 +3,8 @@ FROM --platform=linux/amd64 ubuntu:22.04
 
 # Install necessary packages
 RUN apt-get update && apt-get upgrade -y && apt-get install -y git wget
-COPY ../linux/router-orchestrator.tar.gz .
+RUN ls -latr
+COPY ./linux/router-orchestrator.tar.gz .
 
 RUN wget https://raw.githubusercontent.com/router-protocol/routerd-libs/main/libwasmvm.x86_64.so
 RUN cp libwasmvm.x86_64.so /lib
