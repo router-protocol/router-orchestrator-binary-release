@@ -19,11 +19,11 @@ EXPOSE 8001
 RUN touch .env
 
 # Clean up
-RUN apt-get remove -y wget bash --allow-remove-essential && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /root/.ssh && \
-    rm /bin/sh
+# RUN apt-get remove -y wget bash --allow-remove-essential && \
+#     apt-get autoremove -y && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/* && \
+#     rm -rf /root/.ssh && \
+#     rm /bin/sh
 
 ENTRYPOINT ["router-orchestrator", "start", "--config", "/src/config.json", "--reset"]
