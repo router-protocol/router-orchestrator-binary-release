@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: '1.20'
 
@@ -20,7 +20,7 @@ jobs:
     needs: setup
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'router-protocol/router-orchestrator'
           ref: 'main'
@@ -38,7 +38,7 @@ jobs:
           tar -czvf router-orchestrator.tar.gz router-orchestrator
           mv router-orchestrator.tar.gz ${{ github.workspace }}/router-chain-binaries/
       - name: Archive router-orchestrator binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: router-orchestrator
           path: ${{ github.workspace }}/router-chain-binaries/router-orchestrator.tar.gz
@@ -48,11 +48,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Download router-orchestrator binary
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: router-orchestrator
           path: ${{ github.workspace }}/router-chain-binaries/
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'router-protocol/router-orchestrator-binary-release'
           ref: 'ubuntu-build'
@@ -69,4 +69,3 @@ jobs:
           git add linux/router-orchestrator.tar.gz
           git commit -m "Latest orchestrator executable updated: $(date +'%Y-%m-%d %H:%M:%S')"
           git push
-
